@@ -1,59 +1,42 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import './chat.css'
 import queryString from 'query-string'
-import io from 'socket.io-client'
 import InfoBar from '../InfoBar/InfoBar'
 import Input from '../Input/Message'
 import Messages from '../Messages/Messages'
-let ENDPOINT = 'localhost:3000'
-let socket
+import { useInjectSaga } from 'redux-injectors'
+import { sliceKey, actions } from '../../store/slice/messages'
+import { useDispatch, useSelector } from 'react-redux'
+import { messageSaga } from '../../store/saga/messageSaga'
+// import { selectMessages, selectMessage } from '../../store/seletor/messageSelector'
+import { selectSocket } from '../../store/seletor/socketSeletor'
 const Chat = ({ location }) => {
-  const [name, setName] = useState('')
-  const [room, setRoom] = useState('')
-  const [messages, setMessages] = useState([])
-  const [message, setMessage] = useState()
+  const dispatch = useDispatch()
+  const socket = useSelector(selectSocket)
+  useInjectSaga({ key: sliceKey, saga: messageSaga })
+  // const messages = useSelector(selectMessages)
+  // const message = useSelector(selectMessage)
   useEffect(() => {
     const { name, room } = queryString.parse(location.search)
-    socket = io(ENDPOINT)
-    setName(name)
-    setRoom(room)
-    socket.emit('join', { name, room }, ({ error }) => {
-      alert(error)
-    })
-    return () => {
-      socket.emit('disconect')
-      socket.off()
-    }
-  }, [ENDPOINT, location.search])
+    dispatch(actions.joinRoom({ name, room }))
+    // eslint-disable-next-line 
+  }, [location.search])
   useEffect(() => {
-    socket.on('message', message => {
-      setMessages(messages => [...messages, message])
+    socket.on('message', messages => {
+      dispatch(actions.loadingMessages([...messages]))
     })
     socket.on('loadingMessages', messages => {
-      console.log(messages)
-      setMessages([...messages])
+      dispatch(actions.loadingMessages([...messages]))
     })
+    // eslint-disable-next-line 
   }, [])
-  
-  const sendMessage = e => {
-    e.preventDefault()
-    if (message) {
-      socket.emit('sendMessage', message)
-    }
-  }
-  
-  console.log(message, messages)
 
   return (
     <div className="outerContainer">
       <div className="container">
-        <InfoBar room={room} />
-        <Messages messages={messages} name={name} />
-        <Input
-          message={message}
-          setMessage={setMessage}
-          sendMessage={sendMessage}
-        />
+        <InfoBar />
+        <Messages />
+        <Input />
       </div>
     </div>
   )

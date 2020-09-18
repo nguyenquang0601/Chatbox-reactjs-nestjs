@@ -29,26 +29,14 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       ...payload
     })
     client.join(user.room)
-    // client.emit('message', {
-    //   user: 'admin',
-    //   text: `${user.name}, welcome to the room ${user.room}`
-    // })
-    // client.broadcast.to(user.room).emit('message', {
-    //   user: 'admin',
-    //   text: `${user.name} has joined`
-    // })
-    // await this.mesService.saveMessage(user.room, `${user.name} has joined`, 'admin')
     const messagesInRoom = await this.mesService.getMessageInRoom(user.room)
-    console.log(messagesInRoom)
     this.server.to(user.room).emit('loadingMessages', messagesInRoom)
   }
   @SubscribeMessage('sendMessage')
   async sendMessage(client: Socket, payload: any) {
     const user: any = await this.userService.getUser(client.id)
     const mes = await this.mesService.saveMessage(user.room, payload, user.name)
-    this.server.to(user.room).emit('message', {
-      user: user.name,
-      text: payload
-    })
+    const messagesInRoom = await this.mesService.getMessageInRoom(user.room)
+    this.server.to(user.room).emit('message', messagesInRoom)
   }
 }
