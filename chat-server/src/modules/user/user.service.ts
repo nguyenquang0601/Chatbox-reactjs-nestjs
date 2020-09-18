@@ -1,6 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { GenerateToken } from 'src/common/auth/token';
 
-const users = [];
+const users = [{
+  id: 1,
+  name: 'admin',
+  password: '',
+  room: ''
+}];
 @Injectable()
 export class UserService {
   async addUser(input) {
@@ -11,7 +17,7 @@ export class UserService {
       return existsUser
       throw new HttpException('Username is taken', HttpStatus.CONFLICT)
     }
-    users.push({ id: input.id, name, room })
+    users.push({ id: input.id, name, room, password: '' })
     return { id: input.id, name, room }
   }
   async removeUser(id) {
@@ -25,7 +31,15 @@ export class UserService {
     return user
   }
   async getUserInRoom(room) {
-    const userinRoom = users.filter(user => user.room = --room)
+    const userinRoom = users.filter(user => user.room === room)
     return userinRoom
+  }
+  async login(input) {
+    const user = users.find(user => user.name === input.username)
+    if (!user) {
+      throw new HttpException('Not found user', HttpStatus.NOT_FOUND)
+    }
+    const token = GenerateToken(user)
+    return token
   }
 }

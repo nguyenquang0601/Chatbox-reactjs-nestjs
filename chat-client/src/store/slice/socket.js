@@ -6,9 +6,9 @@ export const inintSocket = {
 }
 const socketReducer = createSlice({
   name: 'socketReducer',
-  inintSocket,
+  initialState: inintSocket,
   reducers: {
     load(_, __) { }
   }
 })
-export const { key: sliceKey, reducer, actions } = socketReducer
+export const { name: sliceKey, reducer, actions } = socketReducer

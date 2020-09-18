@@ -27,6 +27,8 @@
     "@nestjs/platform-socket.io": "^7.4.4",
     "@nestjs/websockets": "^7.4.4",
     "@types/socket.io": "^2.1.11",
+    "brcypt": "^1.0.1",
+    "jsonwebtoken": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",

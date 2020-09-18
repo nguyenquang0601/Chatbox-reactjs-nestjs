@@ -1,7 +1,7 @@
 import React from 'react'
 import './Message.css'
 import ScrollToBottom from 'react-scroll-to-bottom'
-import Message from '../Message/Message'
+import Message from '../Message'
 import { useSelector } from 'react-redux'
 import { selectMessages, selectName } from '../../store/seletor/messageSelector'
 const Messages = () => {
