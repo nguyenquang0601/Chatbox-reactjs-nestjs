@@ -4,6 +4,7 @@ export const initialState = {
   messages: [],
   message: '',
   room: '',
+  idRoom: '',
   name: ''
 }
 const MessagesReducer = createSlice({
@@ -15,7 +16,8 @@ const MessagesReducer = createSlice({
       state.name = action.payload.name
     },
     loadingMessages(state, action) {
-      state.messages = action.payload
+      state.messages = action.payload.messages
+      state.idRoom = action.payload.id
     },
     sendMessage(state, action) {
       state.message = action.payload

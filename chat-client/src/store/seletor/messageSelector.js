@@ -18,3 +18,7 @@ export const selectName = createSelector(
   [select],
   ({ ...select }) => select?.name
 )
+export const selectIdRoom = createSelector(
+  [select],
+  ({ ...select }) => select?.idRoom
+)
