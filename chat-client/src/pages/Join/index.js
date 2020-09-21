@@ -1,22 +1,17 @@
-import React, { useState, useRef } from 'react'
-import { Link, withRouter, useHistory } from 'react-router-dom'
+import React, { useRef } from 'react'
+import { withRouter, useHistory } from 'react-router-dom'
 import './join.css'
 import { useSelector, useDispatch } from 'react-redux'
-import { selectName } from '../../store/seletor/messageSelector'
 import { actions } from '../../store/slice/messages'
-// import history from '../../utils/history'
+import { selectMe } from '../../store/seletor/authSelector'
 
 const Join = () => {
-  // const [name, setName] = useState('')
-  // const [room, setRoom] = useState('')
-  // const roomRef = 
   const history = useHistory()
   const roomRef = useRef()
-  const name = useSelector(selectName)
   const dispatch = useDispatch()
+  const { username: name } = useSelector(selectMe)
   const handleJoin = (e) => {
     e.preventDefault()
-    console.log(e)
     if (roomRef.current?.value.length > 0) {
       dispatch(actions.joinRoom({ name, room: roomRef.current.value }))
       history.push(`/room/${roomRef.current.value}`)

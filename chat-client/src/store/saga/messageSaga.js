@@ -1,10 +1,11 @@
 import { takeLatest, select } from 'redux-saga/effects'
 import { actions } from '../slice/messages'
-import { selectName, selectRoom, selectMessage } from '../seletor/messageSelector'
+import { selectRoom, selectMessage } from '../seletor/messageSelector'
 import { selectSocket } from '../seletor/socketSeletor'
+import { selectMe } from '../seletor/authSelector'
 export function* joinRoom() {
   const socket = yield select(selectSocket)
-  const name = yield select(selectName)
+  const { username: name } = yield select(selectMe)
   const room = yield select(selectRoom)
   yield socket.emit('join', { name, room })
   return () => {

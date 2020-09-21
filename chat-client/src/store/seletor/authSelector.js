@@ -10,3 +10,7 @@ export const selectUsername = createSelector(
   [select],
   ({ ...select }) => select?.username
 )
+export const selectMe = createSelector(
+  [select],
+  ({ ...select }) => select?.me
+)

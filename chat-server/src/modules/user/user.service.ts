@@ -1,11 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { GenerateToken } from 'src/common/auth/token';
+import { hash, compare } from 'bcrypt';
 
 const users = [{
   id: 1,
   name: 'admin',
-  password: '',
-  room: ''
+  password: '$2b$10$kpRdsucsCf9LoDWfYrAOpO2bad9J2GYe9Kf0k.6NKQPxwstathZS2',
+  room: []
 }];
 @Injectable()
 export class UserService {
@@ -35,11 +36,22 @@ export class UserService {
     return userinRoom
   }
   async login(input) {
-    const user = users.find(user => user.name === input.username)
+    const user = await users.find(user => user.name === input.username)
     if (!user) {
-      throw new HttpException('Not found user', HttpStatus.NOT_FOUND)
+      throw new HttpException('Username or password incorrect', HttpStatus.NOT_FOUND)
     }
-    const token = GenerateToken(user)
-    return token
+    const password1 = await hash(input.password, 10)
+    console.log(password1)
+    // return password1
+    if (await this.comparePassword(input.password, user.password)) {
+      const token = await GenerateToken(user)
+      return token
+    } else {
+
+      throw new HttpException('Username or password incorrect', HttpStatus.NOT_FOUND)
+    }
+  }
+  async comparePassword(password, hash) {
+    return await compare(password, hash)
   }
 }
