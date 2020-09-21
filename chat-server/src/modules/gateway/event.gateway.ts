@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { UserService } from '../user/user.service';
 import * as uuid from 'uuid'
 import { MessageService } from '../message/message.service';
+import { AuthGuard } from 'src/common/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @WebSocketGateway()
 export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   constructor(

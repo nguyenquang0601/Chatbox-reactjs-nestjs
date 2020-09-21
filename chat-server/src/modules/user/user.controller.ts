@@ -1,5 +1,7 @@
-import { Controller, Post, Body, Req } from '@nestjs/common';
+import { Controller, Post, Body, Req, Get, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
+import { AuthGuard } from 'src/common/auth/auth.guard';
+import { User } from 'src/common/auth/user.decorator';
 
 @Controller('')
 export class UserController {
@@ -13,5 +15,16 @@ export class UserController {
 
     console.log(input)
     return this.userService.login(input)
+  }
+  @Get('me')
+  @UseGuards(AuthGuard)
+  async getMe(@User() id) {
+    const user = await this.userService.getUser(id)
+    return {
+      id: user.id,
+      username: user.name,
+      room: user.room
+    }
+    // console.log(user)
   }
 }

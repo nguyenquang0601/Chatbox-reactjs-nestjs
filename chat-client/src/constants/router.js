@@ -4,11 +4,11 @@ export const RoutersAuth = [
     path: '/join',
     component: 'Join'
   },
-  // {
-  //   exact: true,
-  //   path: '/chat',
-  //   component: ''
-  // },
+  {
+    exact: true,
+    path: '/room',
+    component: 'Join'
+  },
   {
     exact: true,
     path: '/room/:room',

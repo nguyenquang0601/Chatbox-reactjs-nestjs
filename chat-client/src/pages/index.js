@@ -1,19 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 // import Join from './Join';
 // import Chat from './Chat/Chat';
-import { useInjectReducer } from 'redux-injectors';
+import { useInjectReducer, useInjectSaga } from 'redux-injectors';
 import { sliceKey as KeyMess, reducer as MessReducer } from '../store/slice/messages';
-import Login from './Login';
-import PublicRoute from '../components/PublicRouter';
-import PrivateRouter from '../components/PriveRouter';
-import { sliceKey as authKey, reducer as AuthReducer } from '../store/slice/auth';
+import { sliceKey as authKey, reducer as AuthReducer, actions } from '../store/slice/auth';
 import history from '../utils/history';
 import { RoutersAuth, NoAuth } from '../constants/router';
-import { useSelector } from 'react-redux';
-import { actions } from '../store/slice/socket';
+import { useSelector, useDispatch } from 'react-redux';
+// import { actions } from '../store/slice/socket';
 import { checkAuth } from '../store/seletor/authSelector';
-import { sliceKey as socketKey, reducer as socketReducer } from '../store/slice/socket';
+import { authSaga } from '../store/saga/authSaga';
+// import { sliceKey as socketKey, reducer as socketReducer } from '../store/slice/socket';
 
 const components = {}
 for (const c of RoutersAuth) {
@@ -25,9 +23,18 @@ for (const c of NoAuth) {
 
 function AppComponents() {
   useInjectReducer({ key: KeyMess, reducer: MessReducer })
-  // useInjectReducer({ key: socketKey, reducer: socketReducer })
+  // useInjectReducer({ key: s })
   useInjectReducer({ key: authKey, reducer: AuthReducer })
+  useInjectSaga({ key: authKey, saga: authSaga })
+
+  const dispatch = useDispatch()
   const auth = useSelector(checkAuth)
+  useEffect(() => {
+    if (auth) {
+      dispatch(actions.loadPage(null))
+    }
+    // eslint-disable-next-line
+  }, [auth])
   return (
 
     <Router history={history}>
