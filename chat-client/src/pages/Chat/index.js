@@ -21,11 +21,19 @@ const Chat = () => {
     // eslint-disable-next-line 
   }, [])
   useEffect(() => {
-    socket.on('message', messages => {
-      dispatch(actions.loadingMessages([...messages]))
+    socket.on('message', messagesInRoom => {
+      // console.log(messagesInRoom)
+      dispatch(actions.loadingMessages({
+        id: messagesInRoom.idRoom,
+        messages: [...messagesInRoom.messages]
+      }))
     })
-    socket.on('loadingMessages', messages => {
-      dispatch(actions.loadingMessages([...messages]))
+    socket.on('loadingMessages', messagesInRoom => {
+      // console.log(messagesInRoom)
+      dispatch(actions.loadingMessages({
+        id: messagesInRoom.idRoom,
+        messages: [...messagesInRoom.messages]
+      }))
     })
     // eslint-disable-next-line 
   }, [])

@@ -1,13 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { GenerateToken } from 'src/common/auth/token';
 import { hash, compare } from 'bcrypt';
-
-const users = [{
-  id: 1,
-  name: 'admin',
-  password: '$2b$10$kpRdsucsCf9LoDWfYrAOpO2bad9J2GYe9Kf0k.6NKQPxwstathZS2',
-  room: []
-}];
+import { users } from 'src/constants';
+// import {} from '../..'
 @Injectable()
 export class UserService {
   async addUser(input) {
