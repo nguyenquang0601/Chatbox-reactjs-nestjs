@@ -37,15 +37,6 @@ export class RoomService {
     await this.messService.createMessagesInRoom(newRoom.id)
     rooms.push(newRoom)
     return newRoom
-    // const name = input?.name.trim().toLowerCase()
-    // const room = input?.room.trim().toLowerCase()
-    // const existsUser = users.find(user => user.room === room && user.name === name)
-    // if (existsUser) {
-    //   return existsUser
-    //   throw new HttpException('Username is taken', HttpStatus.CONFLICT)
-    // }
-    // users.push({ id: input.id, name, room, password: '' })
-    // return { id: input.id, name, room } 
   }
   async getUserInRoom({ idRoom, idUser }) {
     const roomExists = rooms.find(room => room.id === idRoom)

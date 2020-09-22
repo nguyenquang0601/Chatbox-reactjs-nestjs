@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import '../Join/join.css'
 import { GoogleLogin } from 'react-google-login'
-import FacebookLogin from 'react-facebook-login'
+// import FacebookLogin from 'react-facebook-login'
 import { Link, withRouter, useHistory } from 'react-router-dom'
 import axios from 'axios'
 // import { stringify } from 'query-string'
@@ -23,8 +23,30 @@ const Login = () => {
     axios.post('http://localhost:3000/login', input).then(res => {
       localStorage.setItem('access-token', res.data)
       dispatch(actions.Login(input.username))
-      history.push('/join')
+      history.push('/room')
     })
+  }
+  const handleRegister = (e) => {
+    let input = {
+      username: usernameRef.current.value,
+      password: passwordRef.current.value
+    }
+    e.preventDefault()
+    axios.post('http://localhost:3000/register', input).then(res => {
+      console.log(res)
+    })
+  }
+  const loginwithGoogle = (res) => {
+    console.log(res)
+    const input = {
+      email: res.profileObj.email
+    }
+    axios.post('http://localhost:3000/loginGoogle', input).then(res => {
+      localStorage.setItem('access-token', res.data)
+      dispatch(actions.Login(input.email))
+      history.push('/room')
+    })
+
   }
   return (
     <>
@@ -34,25 +56,28 @@ const Login = () => {
           <div><input placeholder="Username" className="joinInput" ref={usernameRef} type="text" /></div>
           <div><input placeholder="Password" className="joinInput mt-20" ref={passwordRef} type="password" /></div>
           <Link onClick={(e) => handleLogin(e)} to={`chat?name=$&room=$`}>
-            <button className="button mt-20" type="submit">Sing In</button></Link>
+            <button className="button2 mt-20" type="submit">Sing In</button></Link>
+          <Link onClick={(e) => handleRegister(e)} to={`chat?name=$&room=$`}>
+            <button className="button2 mt-20" type="submit">register</button></Link>
 
           <div style={{ margin: '20px' }}>
             <div style={{ margin: '20px' }} >
               <GoogleLogin
                 clientId="578146149385-2dppsmneu3q8sdgi1qhdv2u36s56of8m.apps.googleusercontent.com"
                 buttonText="Sing in with Google"
-                // onSuccess={(res) => setGoogle(JSON.stringify(res))}
-                // onFailure={(res) => setGoogle(res)}
+                onSuccess={(res) => loginwithGoogle(res)}
+                onFailure={(res) => console.log(res)}
+                // isSignedIn={true}
                 cookiePolicy={'single_host_origin'}
               />
             </div>
             <div>
-              <FacebookLogin
+              {/* <FacebookLogin
                 appId="267947134184871"
                 // autoLoad={false}
                 fields="name,email,picture"
               // callback={(res) => setFacebook(JSON.stringify(res))}
-              />
+              /> */}
             </div>
           </div>
         </div>

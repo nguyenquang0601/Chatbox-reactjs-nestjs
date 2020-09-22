@@ -27,4 +27,12 @@ export class UserController {
     }
     // console.log(user)
   }
+  @Post('register')
+  async Register(@Body() input) {
+    return this.userService.register(input)
+  }
+  @Post('loginGoogle')
+  async loginGoogle(@Body() input) {
+    return this.userService.loginGoogle(input)
+  }
 }

@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, ParseUUIDPipe } from '@nestjs/common';
 import { GenerateToken } from 'src/common/auth/token';
 import { hash, compare } from 'bcrypt';
 import { users } from 'src/constants';
+import * as uuid from 'uuid'
 // import {} from '../..'
 @Injectable()
 export class UserService {
@@ -46,7 +47,37 @@ export class UserService {
       throw new HttpException('Username or password incorrect', HttpStatus.NOT_FOUND)
     }
   }
+  async register(input) {
+    const existsUser = users.find(user => user.name === input.username)
+    if (existsUser) {
+      throw new HttpException('Usernamr is taken', HttpStatus.CONFLICT)
+    }
+    const newUser = {
+      id: uuid.v4(),
+      name: input.username,
+      password: await hash(input.password, 10),
+      room: []
+    }
+    users.push(newUser)
+    return newUser
+  }
   async comparePassword(password, hash) {
     return await compare(password, hash)
+  }
+  async loginGoogle(input) {
+    const existsUser = users.find(user => user.name === input.username)
+    if (existsUser) {
+      const token = await GenerateToken(existsUser)
+      return token
+    }
+    const newUser = {
+      id: uuid.v4(),
+      name: input.email,
+      password: await hash('123445678', 10),
+      room: []
+    }
+    users.push(newUser)
+    const token = await GenerateToken(newUser)
+    return token
   }
 }
