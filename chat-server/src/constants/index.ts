@@ -13,13 +13,25 @@ const users = [
   }
 ];
 const rooms = [{
-  id: 1,
-  room: 'room 1',
+  id: 'ecbda619-7809-4354-8e4f-dee9a095f3d7',
+  room: 'Room 1',
+  usersInRoom: []
+},
+{
+  id: '4af8ea9-6da7-4bf0-8b33-933f6c2e0cde',
+  room: 'Room 1',
   usersInRoom: []
 }]
 const messagesInRoom = [{
   id: '1',
-  idRoom: '1',
+  idRoom: 'ecbda619-7809-4354-8e4f-dee9a095f3d7',
   messages: []
-}]
+},
+{
+  id: '2',
+  idRoom: '4af8ea9-6da7-4bf0-8b33-933f6c2e0cde',
+  messages: []
+},
+
+]
 export { users, rooms, messagesInRoom }

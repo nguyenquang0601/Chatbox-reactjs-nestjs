@@ -10,4 +10,4 @@ function* me() {
 
 export function* authSaga() {
   yield takeLatest(actions.loadPage.type, me)
-}
+} 

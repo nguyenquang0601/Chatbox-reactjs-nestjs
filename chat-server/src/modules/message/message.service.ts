@@ -38,7 +38,7 @@ export class MessageService {
         resolve(hash)
       })
     ])
-    existsRoom.messages.forEach(mess => {
+    existsRoom?.messages?.forEach(mess => {
       mess.username = hashUser[mess.idUser].name
     })
     return existsRoom

@@ -22,3 +22,7 @@ export const selectIdRoom = createSelector(
   [select],
   ({ ...select }) => select?.idRoom
 )
+export const selectRooms = createSelector(
+  [select],
+  ({ ...select }) => select?.rooms
+)
