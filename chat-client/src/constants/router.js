@@ -1,18 +1,13 @@
 export const RoutersAuth = [
   {
     exact: true,
-    path: '/join',
-    component: 'Join'
+    path: '/room/:id',
+    component: 'Chat'
   },
   {
     exact: true,
     path: '/room',
     component: 'Join'
-  },
-  {
-    exact: true,
-    path: '/room/:room',
-    component: 'Chat'
   },
   {
     exact: true,

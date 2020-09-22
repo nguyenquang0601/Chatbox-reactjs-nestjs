@@ -7,8 +7,11 @@ export class RoomService {
   constructor(
     private messService: MessageService
   ) { }
+  async getAllRooms() {
+    return rooms
+  }
   async addUserToRoom(input) {
-    const roomExists = rooms.find(room => room.id === input.idRoom || room.room === input.nameroom)
+    const roomExists = rooms.find(room => room.id === input.idRoom)
     if (roomExists) {
       const userExists = roomExists.usersInRoom.find(user => user.idUser === input.idUser)
       if (userExists) {

@@ -1,35 +1,32 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import './chat.css'
 import InfoBar from '../InfoBar'
 import Input from '../Input'
 import Messages from '../Messages'
-import { useInjectSaga } from 'redux-injectors'
-import { sliceKey, actions } from '../../store/slice/messages'
+import { actions } from '../../store/slice/messages'
 import { useDispatch, useSelector } from 'react-redux'
-import { messageSaga } from '../../store/saga/messageSaga'
 import { selectSocket } from '../../store/seletor/socketSeletor'
-import { selectRoom } from '../../store/seletor/messageSelector'
+import { selectIdRoom } from '../../store/seletor/messageSelector'
 import { selectMe } from '../../store/seletor/authSelector'
+import { withRouter } from 'react-router-dom'
+import Axios from 'axios'
+/* eslint-disable */
 const Chat = () => {
   const dispatch = useDispatch()
   const socket = useSelector(selectSocket)
-  useInjectSaga({ key: sliceKey, saga: messageSaga })
-  const room = useSelector(selectRoom) || window.location.pathname?.split('/')[window.location.pathname?.split('/').length - 1]
+  const idRoom = useSelector(selectIdRoom) || window.location.pathname?.split('/')[window.location.pathname?.split('/').length - 1]
   const { username: name } = useSelector(selectMe)
   useEffect(() => {
-    dispatch(actions.joinRoom({ name, room }))
-    // eslint-disable-next-line 
+    dispatch(actions.joinRoom({ name, room: '1', idRoom }))
   }, [])
   useEffect(() => {
     socket.on('message', messagesInRoom => {
-      // console.log(messagesInRoom)
       dispatch(actions.loadingMessages({
         id: messagesInRoom.idRoom,
         messages: [...messagesInRoom.messages]
       }))
     })
     socket.on('loadingMessages', messagesInRoom => {
-      // console.log(messagesInRoom)
       dispatch(actions.loadingMessages({
         id: messagesInRoom.idRoom,
         messages: [...messagesInRoom.messages]
@@ -38,6 +35,14 @@ const Chat = () => {
     // eslint-disable-next-line 
   }, [])
 
+  const getAllRooms = useCallback(() => {
+    Axios.get('http://localhost:3000/room').then(res => {
+      dispatch(actions.getAllRoom(res.data))
+    })
+  }, [])
+  useEffect(() => {
+    getAllRooms()
+  }, [])
   return (
     <div className="outerContainer">
       <div className="container">
@@ -48,4 +53,4 @@ const Chat = () => {
     </div>
   )
 }
-export default Chat
+export default withRouter(Chat)
